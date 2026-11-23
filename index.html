@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hệ Thống Thi Trắc Nghiệm Trực Tuyến</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <!-- HEADER CHUNG -->
+    <header class="app-header">
+      <div class="header-brand">
+        <span class="brand-badge">EXAM SIMULATOR</span>
+        <h1 id="headerExamTitle">Hệ Thống Thi Trắc Nghiệm</h1>
+      </div>
+      <div class="header-actions" id="headerActions">
+        <button type="button" class="btn btn-outline btn-sm hidden" id="btnResetProgress" title="Xóa dữ liệu bài thi hiện tại">
+          Xóa tiến trình & Tạo mới
+        </button>
+      </div>
+    </header>
+
+    <!-- MÀN HÌNH 1: TẢI ĐỀ & CẤU HÌNH -->
+    <main id="setupScreen" class="screen">
+      <div class="card setup-card">
+        <div class="setup-top-bar">
+          <div>
+            <h2>Tải Lên Đề Thi</h2>
+            <p class="text-muted">Hỗ trợ định dạng <strong>.JSON</strong> và <strong>.TXT</strong>. Tự động lưu tiến trình làm bài.</p>
+          </div>
+          <!-- Nút nạp nhanh đề mẫu từ thư mục assets -->
+          <button type="button" id="btnLoadSampleExam" class="btn btn-secondary btn-sm">
+            ⚡ Dùng thử đề mẫu có sẵn
+          </button>
+        </div>
+
+        <!-- Khu vực tải file -->
+        <div class="upload-box" id="uploadDropZone">
+          <input type="file" id="fileInput" accept=".json,.txt" class="file-input" />
+          <div class="upload-content">
+            <div class="upload-icon">📄</div>
+            <p><strong>Nhấn để chọn file</strong> hoặc kéo thả đề thi vào đây</p>
+            <span class="file-hint">Định dạng chấp nhận: JSON, TXT</span>
+          </div>
+        </div>
+
+        <!-- Thông báo lỗi / thành công khi nạp file -->
+        <div id="importAlert" class="alert hidden" role="alert"></div>
+
+        <!-- Tùy chọn cấu hình bài thi -->
+        <div id="examConfigSection" class="config-section hidden">
+          <div class="exam-summary-box">
+            <h3 id="previewExamTitle">Tên đề thi</h3>
+            <p>Tổng số câu hỏi hợp lệ: <strong id="previewQuestionCount">0</strong> câu</p>
+          </div>
+
+          <div class="options-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chkShuffleQuestions" />
+              <span>Trộn thứ tự câu hỏi</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chkShuffleOptions" />
+              <span>Trộn thứ tự các phương án trả lời (A, B, C, D)</span>
+            </label>
+          </div>
+
+          <button type="button" id="btnStartExam" class="btn btn-primary btn-lg btn-block">
+            Bắt Đầu Làm Bài
+          </button>
+        </div>
+
+        <!-- Hướng dẫn định dạng TXT & JSON -->
+        <details class="format-guide">
+          <summary>Xem hướng dẫn định dạng file .TXT & .JSON (Kèm link tải file mẫu)</summary>
+          <div class="guide-content">
+            <div class="sample-downloads">
+              <span>Tải file mẫu về máy để thử nghiệm:</span>
+              <a href="assets/de_thi_mau.json" download="de_thi_mau.json" class="link-download">⬇ Tải de_thi_mau.json</a>
+              <a href="assets/de_thi_mau.txt" download="de_thi_mau.txt" class="link-download">⬇ Tải de_thi_mau.txt</a>
+            </div>
+            <p><strong>1. Cấu trúc file .TXT chuẩn:</strong></p>
+            <pre>TITLE: Tên đề thi của bạn
+---
+Q: Nội dung câu hỏi số 1?
+A: Phương án A
+B: Phương án B
+C: Phương án C
+D: Phương án D
+ANS: B
+EXP: Giải thích đáp án (không bắt buộc)
+IMG: assets/sample-heart.svg (không bắt buộc)
+---
+Q: Câu hỏi nhiều đáp án (chọn 2)?
+A: Ý 1
+B: Ý 2
+C: Ý 3
+D: Ý 4
+ANS: A, C</pre>
+            <p><strong>2. Cấu trúc file .JSON:</strong> Tuân theo schema chuẩn với <code>examTitle</code> và mảng <code>questions</code>.</p>
+          </div>
+        </details>
+      </div>
+    </main>
+
+    <!-- MÀN HÌNH 2: GIAO DIỆN LÀM BÀI THI -->
+    <main id="examScreen" class="screen hidden">
+      <!-- Thanh thống kê & tiến trình -->
+      <section class="exam-status-bar card">
+        <div class="status-metrics">
+          <div class="metric">
+            <span class="metric-label">Tổng số câu</span>
+            <span class="metric-value" id="statTotal">0</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Đã trả lời</span>
+            <span class="metric-value text-success" id="statAnswered">0</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Chưa trả lời</span>
+            <span class="metric-value text-warning" id="statUnanswered">0</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Thời gian</span>
+            <span class="metric-value" id="statTimer">00:00</span>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBarFill" style="width: 0%;"></div>
+        </div>
+      </section>
+
+      <div class="exam-layout">
+        <!-- Cột trái: Nội dung câu hỏi hiện tại -->
+        <section class="question-panel card">
+          <div class="question-header">
+            <div class="question-meta">
+              <span class="question-number" id="currentQuestionNumber">Câu 1 / 10</span>
+              <span class="question-type-badge" id="currentQuestionType">Một đáp án</span>
+            </div>
+            <button type="button" class="btn btn-flag" id="btnToggleFlag">
+              <span id="flagIcon">🚩</span> <span id="flagText">Đánh dấu xem lại</span>
+            </button>
+          </div>
+
+          <div class="question-body">
+            <div id="questionText" class="question-text"></div>
+            <div id="questionImageContainer" class="question-image hidden">
+              <img id="questionImage" src="" alt="Hình minh họa câu hỏi" />
+            </div>
+            <div id="optionsContainer" class="options-list"></div>
+          </div>
+
+          <div class="question-footer">
+            <button type="button" class="btn btn-secondary" id="btnPrevQuestion">← Câu trước</button>
+            <button type="button" class="btn btn-secondary" id="btnNextQuestion">Câu tiếp theo →</button>
+          </div>
+        </section>
+
+        <!-- Cột phải: Bảng điều hướng câu hỏi -->
+        <aside class="palette-panel card">
+          <h3>Danh sách câu hỏi</h3>
+          <div class="palette-legend">
+            <span><i class="dot dot-current"></i> Đang xem</span>
+            <span><i class="dot dot-answered"></i> Đã làm</span>
+            <span><i class="dot dot-flagged"></i> Đánh dấu</span>
+            <span><i class="dot dot-unanswered"></i> Chưa làm</span>
+          </div>
+          <div id="questionPaletteGrid" class="palette-grid"></div>
+          <div class="palette-actions">
+            <button type="button" id="btnSubmitExam" class="btn btn-primary btn-block">
+              Nộp Bài Thi
+            </button>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- MÀN HÌNH 3: KẾT QUẢ & ÔN TẬP -->
+    <main id="reviewScreen" class="screen hidden">
+      <!-- Bảng tổng hợp điểm -->
+      <section class="card result-summary-card">
+        <h2>Kết Quả Bài Thi</h2>
+        <div class="score-overview">
+          <div class="score-circle">
+            <span class="score-number" id="resScore">0.0</span>
+            <span class="score-label">Điểm số (Hệ 10)</span>
+          </div>
+          <div class="result-grid">
+            <div class="res-box">
+              <span class="res-title">Tổng số câu</span>
+              <strong id="resTotal">0</strong>
+            </div>
+            <div class="res-box res-correct">
+              <span class="res-title">Câu đúng</span>
+              <strong id="resCorrect">0</strong>
+            </div>
+            <div class="res-box res-wrong">
+              <span class="res-title">Câu sai</span>
+              <strong id="resWrong">0</strong>
+            </div>
+            <div class="res-box res-skipped">
+              <span class="res-title">Bỏ trống</span>
+              <strong id="resSkipped">0</strong>
+            </div>
+            <div class="res-box">
+              <span class="res-title">Tỷ lệ chính xác</span>
+              <strong id="resAccuracy">0%</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-toolbar">
+          <div class="filter-group" role="group" aria-label="Bộ lọc câu hỏi">
+            <button type="button" class="btn btn-filter active" data-filter="all">Tất cả (<span id="countAll">0</span>)</button>
+            <button type="button" class="btn btn-filter" data-filter="correct">Đúng (<span id="countCorrect">0</span>)</button>
+            <button type="button" class="btn btn-filter" data-filter="wrong">Sai (<span id="countWrong">0</span>)</button>
+            <button type="button" class="btn btn-filter" data-filter="skipped">Bỏ trống (<span id="countSkipped">0</span>)</button>
+            <button type="button" class="btn btn-filter" data-filter="flagged">Đánh dấu (<span id="countFlagged">0</span>)</button>
+          </div>
+
+          <div class="retry-group">
+            <button type="button" id="btnRetryWrong" class="btn btn-warning">
+              Làm lại các câu sai & bỏ trống
+            </button>
+            <button type="button" id="btnRetakeFull" class="btn btn-outline">
+              Thi lại toàn bộ đề
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Danh sách chi tiết đối chiếu từng câu -->
+      <section id="reviewQuestionsList" class="review-list"></section>
+    </main>
+  </div>
+
+  <!-- MODAL XÁC NHẬN -->
+  <div id="confirmModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <h3 id="modalTitle">Xác nhận</h3>
+      <p id="modalMessage">Bạn có chắc chắn muốn thực hiện thao tác này?</p>
+      <div class="modal-actions">
+        <button type="button" id="btnModalCancel" class="btn btn-outline">Hủy</button>
+        <button type="button" id="btnModalConfirm" class="btn btn-primary">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
