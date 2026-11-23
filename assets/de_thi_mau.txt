@@ -1,0 +1,27 @@
+TITLE: Đề kiểm tra Tin học & Mạng máy tính cơ bản
+---
+ID: IT01
+Q: Giao thức nào hoạt động ở tầng Vận chuyển (Transport Layer) và đảm bảo truyền dữ liệu tin cậy?
+A: UDP
+B: TCP
+C: ICMP
+D: ARP
+ANS: B
+EXP: TCP (Transmission Control Protocol) thiết lập kết nối 3 bước và kiểm soát lỗi gói tin.
+---
+ID: IT02
+Q: Những ngôn ngữ nào sau đây chạy trực tiếp trên trình duyệt web (Client-side)?
+A: HTML5
+B: Python
+C: CSS3
+D: JavaScript
+ANS: A, C, D
+EXP: Trình duyệt web biên dịch trực tiếp HTML5, CSS3 và JavaScript. Python chạy ở phía máy chủ (Server-side).
+---
+ID: IT03
+Q: Địa chỉ IPv4 có độ dài bao nhiêu bit?
+A: 16 bit
+B: 32 bit
+C: 64 bit
+D: 128 bit
+ANS: B

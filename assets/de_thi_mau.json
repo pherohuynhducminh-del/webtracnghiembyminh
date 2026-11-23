@@ -1,0 +1,70 @@
+{
+  "examTitle": "Đề thi Sinh lý học & Kiến thức Y sinh tổng hợp",
+  "questions": [
+    {
+      "id": "Q001",
+      "type": "single",
+      "question": "Bào quan nào trong tế bào chịu trách nhiệm chính cho việc sản xuất ATP thông qua hô hấp hiếu khí?",
+      "options": {
+        "A": "Lưới nội chất trơn",
+        "B": "Ti thể (Mitochondria)",
+        "C": "Bộ máy Golgi",
+        "D": "Lysosome"
+      },
+      "correctAnswers": ["B"],
+      "explanation": "Ti thể là 'nhà máy năng lượng' của tế bào, nơi diễn ra chu trình Krebs và chuỗi chuyền electron để tổng hợp phần lớn ATP."
+    },
+    {
+      "id": "Q002",
+      "type": "multiple",
+      "question": "Những thành phần nào sau đây thuộc hệ thần kinh trung ương ở người? (Chọn tất cả đáp án đúng)",
+      "options": {
+        "A": "Não bộ",
+        "B": "Dây thần kinh sọ",
+        "C": "Tủy sống",
+        "D": "Hạch thần kinh ngoại biên"
+      },
+      "correctAnswers": ["A", "C"],
+      "explanation": "Hệ thần kinh trung ương bao gồm não bộ và tủy sống. Các dây thần kinh sọ và hạch thuộc hệ thần kinh ngoại biên."
+    },
+    {
+      "id": "Q003",
+      "type": "single",
+      "question": "Quan sát sơ đồ cấu tạo buồng tim dưới đây. Van hai lá (van nhĩ thất trái) mở ra vào giai đoạn nào của chu chuyển tim?",
+      "image": "assets/sample-heart.svg",
+      "options": {
+        "A": "Tâm thất thu đẳng trường",
+        "B": "Tâm thất tống máu nhanh",
+        "C": "Cuối pha tâm thất giãn đẳng trường, bắt đầu thời kỳ đổ đầy thất",
+        "D": "Tâm nhĩ giãn hoàn toàn"
+      },
+      "correctAnswers": ["C"],
+      "explanation": "Khi áp suất tâm thất trái giảm xuống thấp hơn áp suất tâm nhĩ trái ở cuối pha giãn đẳng trường, van hai lá mở để máu chảy từ nhĩ trái xuống thất trái."
+    },
+    {
+      "id": "Q004",
+      "type": "single",
+      "question": "Nhóm máu nào được xem là nhóm máu chuyên cho hồng cầu khối trong truyền máu cấp cứu?",
+      "options": {
+        "A": "Nhóm máu AB+",
+        "B": "Nhóm máu O-",
+        "C": "Nhóm máu A+",
+        "D": "Nhóm máu B-"
+      },
+      "correctAnswers": ["B"]
+    },
+    {
+      "id": "Q005",
+      "type": "multiple",
+      "question": "Các hormone nào sau đây do thùy trước tuyến yên tiết ra?",
+      "options": {
+        "A": "GH (Growth Hormone)",
+        "B": "Oxytocin",
+        "C": "TSH (Thyroid-Stimulating Hormone)",
+        "D": "ADH (Vasopressin)"
+      },
+      "correctAnswers": ["A", "C"],
+      "explanation": "GH và TSH do thùy trước tuyến yên tiết ra. Oxytocin và ADH được tổng hợp ở vùng dưới đồi và dự trữ ở thùy sau tuyến yên."
+    }
+  ]
+}
