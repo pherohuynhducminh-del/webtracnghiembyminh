@@ -16,7 +16,7 @@ const DEFAULT_QUESTIONS = [
       "D": "Băng chặt hoặc dùng Vaselin, thuốc mỡ."
     },
     "answer": [
-      "B"
+      "A"
     ],
     "note": ""
   },
